@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">To Do List</string>
+    <string name="welcome_text">Welcome to Hara\'s Todo List</string>
+    <string name="add_item_text">Add List Item</string>
+    <string name="add_item_button_text">+</string>
+    <string name="list_item_edit_text">Item</string>
+    <string name="urgent_check_box_text">Urgent?</string>
+    <string name="save_button_text">Save</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="item_text">item</string>
+    <string name="urgent_text">!!</string>
+</resources>
