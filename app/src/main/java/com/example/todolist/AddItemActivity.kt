@@ -12,6 +12,9 @@ class AddItemActivity : AppCompatActivity() {
     private lateinit var itemEditText: EditText
     private lateinit var urgentCheckBox: CheckBox
     private lateinit var titleTextView: TextView
+    private var isNewItem = true
+    private lateinit var oldItem: TodoItem
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
@@ -19,22 +22,35 @@ class AddItemActivity : AppCompatActivity() {
         urgentCheckBox = findViewById(R.id.urgent_checkbox)
         titleTextView = findViewById(R.id.add_item_text_view)
 
-        if(intent.hasExtra("ITEM")) {
-            val item:String = intent.getStringExtra("ITEM")
-            val urgency = intent.getBooleanExtra("URGENCY", false)
+        if(intent.hasExtra("ITEM_NAME")) {
+            val itemName:String = intent.getStringExtra("ITEM_NAME")
+            val urgency = intent.getBooleanExtra("ITEM_URGENCY", false)
 
-            if (item != null) {
-                itemEditText.setText(item)
+            if (itemName != null) {
+                itemEditText.setText(itemName)
                 titleTextView.text = "Edit List Item"
+                isNewItem = false
+                oldItem = TodoItem(itemName)
             }
             if (urgency == true) {
                 urgentCheckBox.isChecked = true
+                oldItem.isUrgent = urgency
             }
         }
 
     }
     public fun saveAction(view: View){
-
+        var itemName:String = itemEditText.text.toString()
+        val isUrgent = urgentCheckBox.isChecked
+        val newItem = TodoItem(itemName,isUrgent)
+        val dbo = DatabaseOperations(this)
+        if(isNewItem){
+            dbo.addItem(dbo,newItem)
+        }else{
+            dbo.updateItem(dbo,oldItem,newItem)
+        }
+        val intent = Intent(this,MainActivity::class.java)
+        startActivity(intent)
     }
     public fun cancelAction(view: View){
         val intent = Intent(this,MainActivity::class.java)

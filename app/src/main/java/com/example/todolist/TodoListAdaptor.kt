@@ -18,16 +18,19 @@ class TodoListAdaptor(private val todoItemsList:ArrayList<TodoItem>,val activity
         constraintLayout.setOnClickListener(View.OnClickListener {
             val listItemText = constraintLayout.getChildAt(0) as TextView
             val urgentTextView = constraintLayout.getChildAt(1) as TextView
-            val item = listItemText.text
+            val itemName = listItemText.text
             val urgency = urgentTextView.text
             val isUrgent = if(urgency == "!!") true else false
             val intent: Intent = Intent(parent.context,AddItemActivity::class.java)
-            intent.putExtra("ITEM",item)
-            intent.putExtra("URGENCY",isUrgent)
+            intent.putExtra("ITEM_NAME",itemName)
+            intent.putExtra("ITEM_URGENCY",isUrgent)
             activity.startActivity(intent)
         })
         constraintLayout.setOnLongClickListener(View.OnLongClickListener {
             val position = parent.indexOfChild(it)
+            val item = activity.todoItemsList[position]
+            val dbo = DatabaseOperations(parent.context)
+            dbo.deleteItem(dbo,item)
             activity.todoItemsList.removeAt(position)
             notifyItemRemoved(position)
             true

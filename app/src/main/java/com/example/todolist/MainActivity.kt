@@ -16,9 +16,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        todoItemsList.add(TodoItem("Buy groceris"))
-        todoItemsList.add(TodoItem("Do laundry",true))
-        todoItemsList.add(TodoItem("Play guitar",false))
+        val dbo = DatabaseOperations(this)
+        val cursor = dbo.getAllItems(dbo)
+        with(cursor){
+            while(moveToNext()){
+                val itemName = getString(getColumnIndex(DatabaseInfo.TableInfo.COLUMN_ITEM_NAME))
+                val itemUrgency = getInt(getColumnIndex(DatabaseInfo.TableInfo.COLUMN_ITEM_URGENCY))
+                val isUrgent = if (itemUrgency==0)false else true
+                todoItemsList.add(TodoItem(itemName,isUrgent))
+            }
+        }
+
+        //todoItemsList.add(TodoItem("Buy groceris"))
+        //todoItemsList.add(TodoItem("Do laundry",true))
+        //todoItemsList.add(TodoItem("Play guitar",false))
 
         todoListRecyclerView = findViewById(R.id.todolist_recycler_view)
         recyclerLayoutManager = LinearLayoutManager(this)
